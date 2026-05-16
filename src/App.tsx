@@ -12,13 +12,14 @@ const STEPS = [
 ]
 
 const PLAYER_COUNT = 8
-const MAX_BIRTHDATE = '2002-05-31' // bis 23 Jahre am Turniertag (30.05.2026)
-const MIN_BIRTHDATE = '1990-01-01'
+// Altersgrenzen für Spieler am Turniertag (30.05.2026): 16 bis 25 Jahre
+const MAX_BIRTHDATE = '2000-05-31' // älter als 25 wenn Geburtsdatum davor liegt
+const MIN_BIRTHDATE = '2010-05-30' // jünger als 16 wenn Geburtsdatum danach liegt
 
 const BANK = {
   empfaenger: 'Muslimrat München e.V.',
   iban: 'DE92 5023 4500 0436 8100 01',
-  betrag: '50,00 €',
+  betrag: '20,00 €',
 }
 
 type RequiredField = { name: string; label: string; stepIndex: number }
@@ -174,7 +175,13 @@ export default function App() {
       } else if (typeof birth === 'string' && birth < MAX_BIRTHDATE) {
         missing.push({
           name: `spieler${i}_geburtsdatum`,
-          label: `Spieler ${i} — über 23 Jahre alt (Geburtsdatum muss ab ${MAX_BIRTHDATE} sein)`,
+          label: `Spieler ${i} — über 25 Jahre alt (nicht erlaubt)`,
+          stepIndex: 1,
+        })
+      } else if (typeof birth === 'string' && birth > MIN_BIRTHDATE) {
+        missing.push({
+          name: `spieler${i}_geburtsdatum`,
+          label: `Spieler ${i} — unter 16 Jahre alt (nicht erlaubt)`,
           stepIndex: 1,
         })
       }
@@ -222,13 +229,13 @@ export default function App() {
           </div>
           <h2 className="mt-4 text-xl font-bold text-mfe-text">Anmeldung eingegangen!</h2>
           <p className="mt-2 text-sm text-mfe-text-soft leading-relaxed">
-            Wir bestätigen die Anmeldung deines Teams, sobald die <strong className="text-mfe-text">Anmeldegebühr von 50&nbsp;€</strong> auf
+            Wir bestätigen die Anmeldung deines Teams, sobald die <strong className="text-mfe-text">Anmeldegebühr von 20&nbsp;€</strong> auf
             unserem Konto eingegangen ist.
           </p>
           <div className="mt-6 rounded-xl bg-mfe-gold-warm p-4 text-left">
             <p className="text-[13px] font-bold text-mfe-text">Nächste Schritte:</p>
             <ol className="mt-2 list-inside list-decimal space-y-1 text-[13px] text-mfe-text-soft">
-              <li>Anmeldegebühr 50&nbsp;€ überweisen (falls noch nicht erfolgt)</li>
+              <li>Anmeldegebühr 20&nbsp;€ überweisen (falls noch nicht erfolgt)</li>
               <li>Bestätigung per E-Mail abwarten</li>
               <li>Spielplan kommt kurz vor dem Turniertag</li>
             </ol>
@@ -252,7 +259,7 @@ export default function App() {
           MFE Cup 2026 · Anmeldung
         </p>
         <p className="mt-1 text-sm text-mfe-text-soft">
-          5v5 Fußballturnier · 30. & 31. Mai 2026 · ab 14:00 Uhr · Riemer Park
+          4v4 Fußballturnier · 30. & 31. Mai 2026 · ab 14:00 Uhr · Riemer Park
         </p>
       </div>
 
@@ -274,7 +281,7 @@ export default function App() {
           </div>
           <div className="rounded-xl bg-mfe-gold-warm px-4 py-3 text-center">
             <p className="text-[11px] uppercase tracking-wide text-mfe-text-soft">Maximal</p>
-            <p className="text-[14px] font-bold text-mfe-text">16 Teams · 50 € / Team</p>
+            <p className="text-[14px] font-bold text-mfe-text">16 Teams · 20 € / Team</p>
           </div>
         </div>
       )}
@@ -359,8 +366,8 @@ export default function App() {
           <div className={card}>
             <h2 className="text-lg font-bold text-mfe-text">Spielerliste</h2>
             <p className="mt-1 text-sm text-mfe-text-soft">
-              Trage alle <strong className="text-mfe-text">8 Spieler</strong> ein (4 Feldspieler + 1 Torwart + 3 Auswechselspieler).
-              Spieler dürfen am Turniertag <strong className="text-mfe-text">höchstens 23 Jahre</strong> alt sein.
+              Trage alle <strong className="text-mfe-text">8 Spieler</strong> ein (3 Feldspieler + 1 Torwart + 4 Auswechselspieler).
+              Spieler müssen am Turniertag <strong className="text-mfe-text">zwischen 16 und 25 Jahre</strong> alt sein.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -383,8 +390,8 @@ export default function App() {
                         name={`spieler${n}_geburtsdatum`}
                         type="date"
                         required
-                        min={MIN_BIRTHDATE}
-                        max="2010-12-31"
+                        min={MAX_BIRTHDATE}
+                        max={MIN_BIRTHDATE}
                         className={field}
                       />
                     </div>
@@ -406,8 +413,9 @@ export default function App() {
               <div className="rounded-xl bg-mfe-surface p-4 space-y-2.5">
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-purple">1. Allgemeines</p>
                 <ul className="space-y-2 list-disc pl-4">
-                  <li>Gespielt wird im Format <strong className="text-mfe-text">5 gegen 5</strong> (4 Feldspieler + 1 Torwart).</li>
+                  <li>Gespielt wird im Format <strong className="text-mfe-text">4 gegen 4</strong> (3 Feldspieler + 1 Torwart).</li>
                   <li>Pro Team sind <strong className="text-mfe-text">maximal 8 Spieler</strong> erlaubt.</li>
+                  <li>Spieler müssen <strong className="text-mfe-text">zwischen 16 und 25 Jahre</strong> alt sein.</li>
                   <li>Turniermodus und Spielplan werden am Turniertag bekannt gegeben.</li>
                 </ul>
               </div>
@@ -453,7 +461,7 @@ export default function App() {
               <div className="rounded-xl bg-mfe-surface p-4 space-y-2.5">
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-purple">6. Teilnahme</p>
                 <ul className="space-y-2 list-disc pl-4">
-                  <li>Teilnahme nur mit <strong className="text-mfe-text">bezahlter Anmeldegebühr</strong> (50 €).</li>
+                  <li>Teilnahme nur mit <strong className="text-mfe-text">bezahlter Anmeldegebühr</strong> (20 €).</li>
                   <li>Die Anmeldung ist <strong className="text-mfe-text">verbindlich</strong>.</li>
                 </ul>
               </div>
@@ -519,7 +527,7 @@ export default function App() {
                 checked={ueberweisungChecked}
                 onChange={setUeberweisungChecked}
               >
-                Ich bestätige, dass die <strong className="text-mfe-text">Anmeldegebühr von 50&nbsp;€</strong> überwiesen wurde oder unverzüglich überwiesen wird. Mir ist bekannt, dass die Anmeldung erst mit Zahlungseingang gültig ist.
+                Ich bestätige, dass die <strong className="text-mfe-text">Anmeldegebühr von 20&nbsp;€</strong> überwiesen wurde oder unverzüglich überwiesen wird. Mir ist bekannt, dass die Anmeldung erst mit Zahlungseingang gültig ist.
               </Checkbox>
 
               <div>

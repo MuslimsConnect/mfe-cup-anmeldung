@@ -34,7 +34,7 @@ export default async (req) => {
 
   <div style="text-align: center; padding: 24px 0;">
     <h1 style="font-size: 20px; color: #9B6FE8; margin: 0;">Neue MFE Cup Anmeldung</h1>
-    <p style="font-size: 14px; color: #6B6280; margin: 8px 0 0;">München feiert Eid '26 · 5v5 Fußballturnier</p>
+    <p style="font-size: 14px; color: #6B6280; margin: 8px 0 0;">München feiert Eid '26 · 4v4 Fußballturnier</p>
   </div>
 
   <div style="background: white; border-radius: 12px; padding: 24px; border: 1px solid #E8E4F0;">
@@ -71,7 +71,7 @@ export default async (req) => {
     <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #9B6FE8; margin: 0 0 16px;">Anmeldegebühr & Bestätigungen</h2>
     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
       <tr>
-        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 50&nbsp;€</td>
+        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 20&nbsp;€</td>
         <td style="padding: 8px 0; font-weight: 600;">${ueberweisung}</td>
       </tr>
       <tr>
