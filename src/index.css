@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-mfe-purple: #9B6FE8;
+  --color-mfe-purple-deep: #6B3FA0;
+  --color-mfe-purple-light: #C9A8FF;
+  --color-mfe-purple-soft: #EDE5FF;
+  --color-mfe-pink: #E88BFF;
+  --color-mfe-gold: #F5A623;
+  --color-mfe-gold-light: #FFD98E;
+  --color-mfe-gold-warm: #FFF4DE;
+  --color-mfe-surface: #FAFAFE;
+  --color-mfe-card: #FFFFFF;
+  --color-mfe-text: #1C1335;
+  --color-mfe-text-soft: #6B6280;
+  --color-mfe-border: #E8E4F0;
+  --color-mfe-error: #E53E3E;
+  --color-mfe-success: #38A169;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', 'Open Sans', system-ui, sans-serif;
+    background: var(--color-mfe-surface);
+    color: var(--color-mfe-text);
+    margin: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Step transition */
+.step-enter {
+  opacity: 0;
+  transform: translateX(16px);
+}
+.step-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Focus ring */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-mfe-purple) !important;
+  box-shadow: 0 0 0 3px rgba(155, 111, 232, 0.12) !important;
+  outline: none !important;
+}
+
+/* Custom checkbox */
+input[type="checkbox"] {
+  accent-color: var(--color-mfe-purple);
+}
+
+/* iOS viewport fix */
+@supports (-webkit-touch-callout: none) {
+  body { min-height: -webkit-fill-available; }
+}
+
+/* Mobile: prevent zoom on input focus (iOS) */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Sticky nav safe area (iPhone notch) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .sticky.bottom-0 {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+}
