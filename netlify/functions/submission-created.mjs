@@ -71,7 +71,7 @@ export default async (req) => {
     <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #9B6FE8; margin: 0 0 16px;">Anmeldegebühr & Bestätigungen</h2>
     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
       <tr>
-        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 20&nbsp;€</td>
+        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 25&nbsp;€</td>
         <td style="padding: 8px 0; font-weight: 600;">${ueberweisung}</td>
       </tr>
       <tr>
