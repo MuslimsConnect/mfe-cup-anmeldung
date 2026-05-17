@@ -9,14 +9,17 @@ export default async (req) => {
     const email = data.kapitaen_email || '—'
 
     const spielerRows = []
+    let spielerCount = 0
     for (let i = 1; i <= 8; i++) {
-      const name = data[`spieler${i}_name`] || '—'
-      const birth = data[`spieler${i}_geburtsdatum`] || '—'
-      const birthFmt = birth !== '—' ? new Date(birth).toLocaleDateString('de-DE') : '—'
+      const name = (data[`spieler${i}_name`] || '').trim()
+      const birth = (data[`spieler${i}_geburtsdatum`] || '').trim()
+      if (!name && !birth) continue
+      spielerCount++
+      const birthFmt = birth ? new Date(birth).toLocaleDateString('de-DE') : '—'
       spielerRows.push(`
         <tr>
           <td style="padding: 6px 0; color: #6B6280; width: 60px;">${i}.${i === 1 ? ' (K)' : ''}</td>
-          <td style="padding: 6px 0; font-weight: 600;">${name}</td>
+          <td style="padding: 6px 0; font-weight: 600;">${name || '—'}</td>
           <td style="padding: 6px 0; color: #6B6280; text-align: right;">${birthFmt}</td>
         </tr>
       `)
@@ -61,7 +64,7 @@ export default async (req) => {
 
     <hr style="border: none; border-top: 1px solid #E8E4F0; margin: 20px 0;">
 
-    <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #9B6FE8; margin: 0 0 16px;">Spielerliste (8)</h2>
+    <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #9B6FE8; margin: 0 0 16px;">Spielerliste (${spielerCount})</h2>
     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
       ${spielerRows.join('')}
     </table>
@@ -71,7 +74,7 @@ export default async (req) => {
     <h2 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #9B6FE8; margin: 0 0 16px;">Anmeldegebühr & Bestätigungen</h2>
     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
       <tr>
-        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 25&nbsp;€</td>
+        <td style="padding: 8px 0; color: #6B6280; width: 200px;">Anmeldegebühr 20&nbsp;€</td>
         <td style="padding: 8px 0; font-weight: 600;">${ueberweisung}</td>
       </tr>
       <tr>

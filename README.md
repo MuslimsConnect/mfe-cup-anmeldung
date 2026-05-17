@@ -5,7 +5,7 @@ Anmeldeformular für das **MFE Cup 4v4 Fußballturnier** bei München feiert Eid
 - **URL (geplant):** mfecup.muslimsconnect.de
 - **Event:** 30. & 31. Mai 2026 · ab 14:00 Uhr · Riemer Park
 - **Anmeldeschluss:** 27. Mai 2026
-- **Limits:** Max. 16 Teams · 25 € Anmeldegebühr / Team
+- **Limits:** Max. 16 Teams · 20 € Anmeldegebühr / Team
 - **Alter:** Spieler ab 16 Jahre am Turniertag (keine Obergrenze)
 
 ## Stack
@@ -35,7 +35,7 @@ npm run build    # Production Build → dist/
 | Schritt | Felder |
 |---------|--------|
 | 1 — Team | `teamname`, `kapitaen_name`, `kapitaen_telefon`, `kapitaen_email` |
-| 2 — Spieler | `spieler1..8_name`, `spieler1..8_geburtsdatum` (alle Pflicht, ab 16 J.) |
+| 2 — Spieler | `spieler1..4_name`, `spieler1..4_geburtsdatum` (Pflicht, ab 16 J.) · `spieler5..8` optional |
 | 3 — Regelwerk | `regelwerk_bestaetigt` |
 | 4 — Absenden | `ueberweisung_bestaetigt`, `unterschrift_name`, `digitale_bestaetigung` |
 
@@ -44,4 +44,4 @@ npm run build    # Production Build → dist/
 - Empfänger: Muslimrat München e.V.
 - IBAN: DE92 5023 4500 0436 8100 01
 - Verwendungszweck: `MFE Cup 2026 — [Teamname]`
-- Betrag: 25,00 €
+- Betrag: 20,00 €

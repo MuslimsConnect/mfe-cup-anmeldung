@@ -12,13 +12,14 @@ const STEPS = [
 ]
 
 const PLAYER_COUNT = 8
+const REQUIRED_PLAYER_COUNT = 4
 // Altersregel für Spieler am Turniertag (30.05.2026): mindestens 16 Jahre, keine Obergrenze
 const MIN_BIRTHDATE = '2010-05-30' // jünger als 16 wenn Geburtsdatum danach liegt
 
 const BANK = {
   empfaenger: 'Muslimrat München e.V.',
   iban: 'DE92 5023 4500 0436 8100 01',
-  betrag: '25,00 €',
+  betrag: '20,00 €',
 }
 
 type RequiredField = { name: string; label: string; stepIndex: number }
@@ -162,21 +163,28 @@ export default function App() {
       }
     })
 
-    // Spielerliste: alle 8 Spieler Name + Geburtsdatum pflicht, max. 23 Jahre
+    // Spielerliste: Spieler 1–4 Pflicht, 5–8 optional (aber wenn ausgefüllt: vollständig + Alter ≥ 16)
     for (let i = 1; i <= PLAYER_COUNT; i++) {
-      const name = formData.get(`spieler${i}_name`)
-      const birth = formData.get(`spieler${i}_geburtsdatum`)
-      if (!name || (typeof name === 'string' && !name.trim())) {
-        missing.push({ name: `spieler${i}_name`, label: `Spieler ${i} — Name`, stepIndex: 1 })
-      }
-      if (!birth || (typeof birth === 'string' && !birth.trim())) {
-        missing.push({ name: `spieler${i}_geburtsdatum`, label: `Spieler ${i} — Geburtsdatum`, stepIndex: 1 })
-      } else if (typeof birth === 'string' && birth > MIN_BIRTHDATE) {
-        missing.push({
-          name: `spieler${i}_geburtsdatum`,
-          label: `Spieler ${i} — unter 16 Jahre alt (nicht erlaubt)`,
-          stepIndex: 1,
-        })
+      const nameRaw = formData.get(`spieler${i}_name`)
+      const birthRaw = formData.get(`spieler${i}_geburtsdatum`)
+      const name = typeof nameRaw === 'string' ? nameRaw.trim() : ''
+      const birth = typeof birthRaw === 'string' ? birthRaw.trim() : ''
+      const isRequired = i <= REQUIRED_PLAYER_COUNT
+      const hasAnyInput = name !== '' || birth !== ''
+
+      if (isRequired || hasAnyInput) {
+        if (!name) {
+          missing.push({ name: `spieler${i}_name`, label: `Spieler ${i} — Name`, stepIndex: 1 })
+        }
+        if (!birth) {
+          missing.push({ name: `spieler${i}_geburtsdatum`, label: `Spieler ${i} — Geburtsdatum`, stepIndex: 1 })
+        } else if (birth > MIN_BIRTHDATE) {
+          missing.push({
+            name: `spieler${i}_geburtsdatum`,
+            label: `Spieler ${i} — unter 16 Jahre alt (nicht erlaubt)`,
+            stepIndex: 1,
+          })
+        }
       }
     }
 
@@ -274,7 +282,7 @@ export default function App() {
           </div>
           <div className="rounded-xl bg-mfe-gold-warm px-4 py-3 text-center">
             <p className="text-[11px] uppercase tracking-wide text-mfe-text-soft">Maximal</p>
-            <p className="text-[14px] font-bold text-mfe-text">16 Teams · 25 € / Team</p>
+            <p className="text-[14px] font-bold text-mfe-text">16 Teams · 20 € / Team</p>
           </div>
         </div>
       )}
@@ -359,30 +367,37 @@ export default function App() {
           <div className={card}>
             <h2 className="text-lg font-bold text-mfe-text">Spielerliste</h2>
             <p className="mt-1 text-sm text-mfe-text-soft">
-              Trage alle <strong className="text-mfe-text">8 Spieler</strong> ein (3 Feldspieler + 1 Torwart + 4 Auswechselspieler).
-              Spieler müssen am Turniertag <strong className="text-mfe-text">mindestens 16 Jahre</strong> alt sein (keine Obergrenze).
+              Mindestens <strong className="text-mfe-text">4 Spieler</strong> (3 Feldspieler + 1 Torwart) sind Pflicht.
+              Bis zu <strong className="text-mfe-text">4 weitere Auswechselspieler</strong> können optional ergänzt werden.
+              Alle Spieler müssen am Turniertag <strong className="text-mfe-text">mindestens 16 Jahre</strong> alt sein (keine Obergrenze).
             </p>
 
             <div className="mt-6 space-y-3">
               {Array.from({ length: PLAYER_COUNT }).map((_, idx) => {
                 const n = idx + 1
+                const required = n <= REQUIRED_PLAYER_COUNT
                 return (
                   <div key={n} className="rounded-xl border border-mfe-border bg-mfe-surface p-4">
-                    <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-text-soft mb-3">
-                      Spieler {n}{n === 1 ? ' (Kapitän)' : ''}
-                    </p>
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-text-soft">
+                        Spieler {n}{n === 1 ? ' (Kapitän)' : ''}
+                      </p>
+                      <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${required ? 'bg-mfe-purple-soft text-mfe-purple' : 'bg-mfe-gold-warm text-mfe-text-soft'}`}>
+                        {required ? 'Pflicht' : 'Optional'}
+                      </span>
+                    </div>
                     <div className="grid gap-3 sm:grid-cols-[1fr_180px]">
                       <input
                         name={`spieler${n}_name`}
                         type="text"
-                        required
+                        required={required}
                         className={field}
                         placeholder="Vor- und Nachname"
                       />
                       <input
                         name={`spieler${n}_geburtsdatum`}
                         type="date"
-                        required
+                        required={required}
                         max={MIN_BIRTHDATE}
                         className={field}
                       />
@@ -406,7 +421,7 @@ export default function App() {
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-purple">1. Allgemeines</p>
                 <ul className="space-y-2 list-disc pl-4">
                   <li>Gespielt wird im Format <strong className="text-mfe-text">4 gegen 4</strong> (3 Feldspieler + 1 Torwart).</li>
-                  <li>Pro Team sind <strong className="text-mfe-text">maximal 8 Spieler</strong> erlaubt.</li>
+                  <li>Pro Team sind <strong className="text-mfe-text">mindestens 4 und maximal 8 Spieler</strong> erlaubt.</li>
                   <li>Spieler müssen <strong className="text-mfe-text">mindestens 16 Jahre</strong> alt sein (keine Obergrenze).</li>
                   <li>Turniermodus und Spielplan werden am Turniertag bekannt gegeben.</li>
                 </ul>
@@ -453,7 +468,7 @@ export default function App() {
               <div className="rounded-xl bg-mfe-surface p-4 space-y-2.5">
                 <p className="text-[12px] font-semibold uppercase tracking-wide text-mfe-purple">6. Teilnahme</p>
                 <ul className="space-y-2 list-disc pl-4">
-                  <li>Teilnahme nur mit <strong className="text-mfe-text">bezahlter Anmeldegebühr</strong> (25 €).</li>
+                  <li>Teilnahme nur mit <strong className="text-mfe-text">bezahlter Anmeldegebühr</strong> (20 €).</li>
                   <li>Die Anmeldung ist <strong className="text-mfe-text">verbindlich</strong>.</li>
                 </ul>
               </div>
